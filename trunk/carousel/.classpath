@@ -1,0 +1,8 @@
+<classpath>
+  <classpathentry kind="src" path="src/main/java" />
+  <classpathentry kind="output" path="target/classes" />
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-dev/2.0.0/gwt-dev-2.0.0.jar" />
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-user/2.0.0/gwt-user-2.0.0.jar" />
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+  <classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER" />
+</classpath>

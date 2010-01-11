@@ -1,0 +1,23 @@
+.phase0 {
+	z-index: -1;
+}
+
+.phase1 {
+	z-index: -2;
+}
+
+.phase2 {
+	z-index: -3;
+}
+
+.phase3 {
+	z-index: -4;
+}
+
+.phase4 {
+	z-index: -3;
+}
+
+.phase5 {
+	z-index: -2;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry kind="src" path="src/main/java" />
+  <classpathentry kind="src" output="target/war" path="src/main/webapp" />
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-dev/2.0.0/gwt-dev-2.0.0.jar" />
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-user/2.0.0/gwt-user-2.0.0.jar" />
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" />
+  <classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER" />
+  <classpathentry combineaccessrules="false" kind="src" path="/gwt-carousel" />
+  <classpathentry kind="output" path="target/classes" />
+</classpath>
