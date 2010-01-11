@@ -12,6 +12,10 @@
   <groupId>sk.gtug.carousel</groupId>
   <name>GWT-Carousel Example</name>
 
+  <properties>
+    <gwt-version>2.0.0</gwt-version>
+  </properties>
+
   <dependencies>
     <dependency>
       <artifactId>gwt-carousel</artifactId>
@@ -32,4 +36,36 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>CreateAdditonalArtifacts</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <ant antfile="${basedir}/build.xml" inheritRefs="true" target="CompileGWTSources">
+                  <property name="gwt.module" value="sk.gtug.example.carousel.CarouselExample" />
+                </ant>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwt-version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 </project>

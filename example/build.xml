@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="foo" default="CompileGWTSources">
+	<target name="CompileGWTSources">
+		<available file="src/main/webapp/js-gwt/${gwt.module}" property="isCompiled" />
+		<ant target="compileModule" inheritrefs="true" />
+	</target>
+
+	<target name="compileModule" unless="isCompiled">
+		<delete failonerror="false">
+			<fileset dir="target/war/${gwt.module}" />
+		</delete>
+
+		<java fork="true" classname="com.google.gwt.dev.Compiler" failonerror="true">
+			<jvmarg value="-Xmx256M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+			<!-- <arg value="-draftCompile" />  -->
+			<!-- <arg value="-XdisableAggressiveOptimization" />  -->
+			<arg value="-war" />
+			<arg value="target/war" />
+			<arg value="-extra" />
+			<arg value="target/js-gwt/extra" />
+			<arg value="-gen" />
+			<arg value="target/js-gwt/gen" />
+			<arg value="-localWorkers" />
+			<arg value="1" />
+			<!-- <arg value="-soyc" /> -->
+			<!-- <arg value="-style" /> -->
+			<!-- <arg value="obf" /> -->
+			<!--<arg value="pretty"/>-->
+			<!--<arg value="detailed"/>-->
+			<arg value="${gwt.module}" />
+			<classpath>
+				<path refid="maven.plugin.classpath" />
+				<path refid="maven.compile.classpath" />
+				<pathelement location="src/main/java" />
+			</classpath>
+		</java>
+		<echo>GWT compilation done.</echo>
+	</target>
+
+
+</project>
