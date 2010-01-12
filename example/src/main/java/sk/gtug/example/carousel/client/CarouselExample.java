@@ -8,10 +8,12 @@ import sk.gtug.carousel.client.ImageLoader.CallBack;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class CarouselExample implements EntryPoint {
@@ -29,13 +31,23 @@ public class CarouselExample implements EntryPoint {
         ImageResource image3();
     }
 
+    interface Binder extends UiBinder<DockLayoutPanel, CarouselExample> {
+    }
+
+    private static final Binder binder = GWT.create(Binder.class);
+
+    @UiField
+    Carousel albums;
+
     public void onModuleLoad() {
         RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
+        DockLayoutPanel root = binder.createAndBindUi(this);
+        rootLayoutPanel.add(root);
+
         final ImageResource img1 = Images.INSTANCE.image1();
         final ImageResource img2 = Images.INSTANCE.image2();
         final ImageResource img3 = Images.INSTANCE.image3();
 
-        final Carousel imagePanel = new Carousel();
         String[] imageUrls = new String[] { img1.getURL(), img2.getURL(), img3.getURL(), img1.getURL(), img2.getURL(), img3.getURL(), img1.getURL(),
                 img2.getURL(), img3.getURL() };
         ImageLoader.loadImages(imageUrls, new CallBack() {
@@ -53,12 +65,10 @@ public class CarouselExample implements EntryPoint {
                         return imageHandles[index].getUrl();
                     }
                 };
-                imagePanel.setImageProvider(carouselImageProvider);
+                albums.setImageProvider(carouselImageProvider);
             }
         });
-        rootLayoutPanel.add(imagePanel);
-        rootLayoutPanel.setWidgetTopBottom(imagePanel, 0, Unit.PX, 0, Unit.PX);
-        rootLayoutPanel.setWidgetLeftRight(imagePanel, 0, Unit.PX, 0, Unit.PX);
-        rootLayoutPanel.forceLayout();
+        
+        rootLayoutPanel.animate(10);
     }
 }
