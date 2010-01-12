@@ -24,8 +24,8 @@
 			<arg value="-localWorkers" />
 			<arg value="1" />
 			<!-- <arg value="-soyc" /> -->
-			<!-- <arg value="-style" /> -->
-			<!-- <arg value="obf" /> -->
+			<arg value="-style" />
+			<arg value="obf" /> 
 			<!--<arg value="pretty"/>-->
 			<!--<arg value="detailed"/>-->
 			<arg value="${gwt.module}" />

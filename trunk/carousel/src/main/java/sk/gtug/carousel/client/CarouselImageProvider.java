@@ -2,8 +2,8 @@ package sk.gtug.carousel.client;
 
 public interface CarouselImageProvider {
 
-    long size();
+    int size();
 
-    String getImageUrl(int index);
+    ImageHandle getImageUrl(int index);
 
 }
