@@ -115,12 +115,12 @@ class CarouselImagePanel extends Composite {
 		this.phase = phase;
 	}
 
-	public void setImageHandle(ImageHandle imageHandle) {
+	public void setImageHandle(String imageHandle) {
 		if (imageHandle == null)
 			this.setVisible(false);
 		else
 			setVisible(true);
-		this.image.setUrl(imageHandle.getUrl());
+		this.image.setUrl(imageHandle);
 	}
 
 	public static class ImageRect {
