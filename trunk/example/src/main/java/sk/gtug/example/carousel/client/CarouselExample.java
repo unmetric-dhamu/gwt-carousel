@@ -9,6 +9,7 @@ import sk.gtug.carousel.client.ImageLoader.CallBack;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -22,13 +23,13 @@ public class CarouselExample implements EntryPoint {
 		Images INSTANCE = GWT.create(Images.class);
 
 		@Source("image1.jpg")
-		ImageResource image1();
+		DataResource image1();
 
 		@Source("image2.jpg")
-		ImageResource image2();
+		DataResource image2();
 
 		@Source("image3.jpg")
-		ImageResource image3();
+		DataResource image3();
 	}
 
 	interface Binder extends UiBinder<DockLayoutPanel, CarouselExample> {
@@ -44,13 +45,13 @@ public class CarouselExample implements EntryPoint {
 		DockLayoutPanel root = binder.createAndBindUi(this);
 		rootLayoutPanel.add(root);
 
-		final ImageResource img1 = Images.INSTANCE.image1();
-		final ImageResource img2 = Images.INSTANCE.image2();
-		final ImageResource img3 = Images.INSTANCE.image3();
+		final DataResource img1 = Images.INSTANCE.image1();
+		final DataResource img2 = Images.INSTANCE.image2();
+		final DataResource img3 = Images.INSTANCE.image3();
 
-		String[] imageUrls = new String[] { img1.getURL(), img2.getURL(),
-				img3.getURL(), img3.getURL(), img2.getURL(), img2.getURL(),
-				img2.getURL(), img1.getURL(), img3.getURL() };
+		String[] imageUrls = new String[] { img1.getUrl(), img2.getUrl(),
+				img3.getUrl(), img3.getUrl(), img2.getUrl(), img2.getUrl(),
+				img2.getUrl(), img1.getUrl(), img3.getUrl() };
 		ImageLoader.loadImages(imageUrls, new CallBack() {
 			public void onImagesLoaded(final ImageHandle[] imageHandles) {
 				Window.alert("loaded images:" + imageHandles.length);
