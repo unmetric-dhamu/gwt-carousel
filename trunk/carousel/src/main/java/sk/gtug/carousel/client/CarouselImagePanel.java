@@ -1,6 +1,7 @@
 package sk.gtug.carousel.client;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -22,8 +23,15 @@ class CarouselImagePanel extends Composite implements RequiresResize {
         this.phase = phase;
         initWidget(image);
         setVisible(false);
-        this.addStyleName("phase" + phase);
     }
+
+    public void setZIndex(int zIndex) {
+        setZIndexPrivate(getElement(), zIndex);
+    }
+
+    private native void setZIndexPrivate(Element el, int zIndex) /*-{
+        el.style.zIndex = zIndex;
+    }-*/;
 
     private ImageRect getImageRectForPhase(int phase) {
         int x = boardWidth / 2;
@@ -50,14 +58,14 @@ class CarouselImagePanel extends Composite implements RequiresResize {
     }
 
     public AnimationInfo getAnimationInfo(final ImageRect rect, final int steps, int lastPhase) {
-        double stepX = (rect.x - currentRect.x) / steps;
+        double stepX = ((double) (rect.x - currentRect.x)) / steps;
         double stepY = (rect.y - currentRect.y) / steps;
         double stepWidth = (rect.width - currentRect.width) / steps;
         final AnimationInfo anStep = new AnimationInfo(stepX, stepY, stepWidth, currentRect, rect, steps, lastPhase, phase);
         return anStep;
     }
 
-    public ImageRect calculateStepRect(int step, final double stepX, final double stepY, final double stepWidth, ImageRect rect) {
+    public ImageRect calculateStepRect(double step, final double stepX, final double stepY, final double stepWidth, ImageRect rect) {
         int newX = (int) (rect.x + step * stepX);
         int newY = (int) (rect.y + step * stepY);
         int newWidth = (int) (rect.width + step * stepWidth);
@@ -92,8 +100,18 @@ class CarouselImagePanel extends Composite implements RequiresResize {
     }
 
     public void updateStyle(AnimationInfo animInfo) {
-        this.removeStyleName("phase" + animInfo.lastPhase);
-        this.addStyleName("phase" + animInfo.newPhase);
+        this.setZIndex(getZIndex(animInfo));
+    }
+
+    private int getZIndex(AnimationInfo animInfo) {
+        int newPhase = animInfo.newPhase;
+        if (newPhase == 0)
+            return 0;
+        if (newPhase == 1 || newPhase == 5)
+            return -1;
+        if (newPhase == 2 || newPhase == 4)
+            return -2;
+        return -3;
     }
 
     public int getPhase() {
@@ -109,8 +127,8 @@ class CarouselImagePanel extends Composite implements RequiresResize {
             this.setVisible(false);
         } else {
             setVisible(true);
-            if (!imageHandle.equals(image.getUrl()))
-                this.image.setUrl(imageHandle);
+            // if (!imageHandle.equals(image.getUrl()))
+            this.image.setUrl(imageHandle);
         }
     }
 
