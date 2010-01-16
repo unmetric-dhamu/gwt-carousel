@@ -30,6 +30,7 @@ public class Carousel extends LayoutPanel {
 		panels.add(new CarouselImagePanel(this, -3));
 		panels.add(new CarouselImagePanel(this, 1));
 		panels.add(new CarouselImagePanel(this, 2));
+		panels.add(new CarouselImagePanel(this, 3));
 
 		for (CarouselImagePanel panel : panels)
 			add(panel);
@@ -81,10 +82,14 @@ public class Carousel extends LayoutPanel {
 		final Set<CarouselImagePanel> panels = animInfo.keySet();
 		this.active = true;
 		for (CarouselImagePanel panel : panels) {
-			if (animInfo.get(panel).lastPhase == -3)
-				panel
-						.setImageHandle(delta > 0 ? getImageUrl(actualImageIndex + 2)
-								: getImageUrl(actualImageIndex - 2));
+			if (animInfo.get(panel).lastPhase == -3 && delta > 0) {
+				panel.setImageHandle(getImageUrl(actualImageIndex + 3));
+				break;
+			}
+			if (animInfo.get(panel).lastPhase == 3 && delta < 0) {
+				panel.setImageHandle(getImageUrl(actualImageIndex - 3));
+				break;
+			}
 		}
 		new Timer() {
 			int duration = 150;
@@ -129,28 +134,14 @@ public class Carousel extends LayoutPanel {
 
 	private void updateImageInPanels() {
 		for (CarouselImagePanel panel : panels) {
-
 			panel.setImageHandle(getImageUrl(actualImageIndex
 					+ panel.getPhase()));
-			//        	
-			// if (panel.getPhase() == 0)
-			// panel.setImageHandle(getImageUrl(actualImageIndex));
-			// if (panel.getPhase() == 1)
-			// panel.setImageHandle(getImageUrl(actualImageIndex - 1));
-			// if (panel.getPhase() == 2)
-			// panel.setImageHandle(getImageUrl(actualImageIndex - 2));
-			// if (panel.getPhase() == 3)
-			// panel.setImageHandle(null);
-			// if (panel.getPhase() == 4)
-			// panel.setImageHandle(getImageUrl(actualImageIndex + 2));
-			// if (panel.getPhase() == 5)
-			// panel.setImageHandle(getImageUrl(actualImageIndex + 1));
 		}
 	}
 
-	private String getImageUrl(int actualImageIndex) {
+	private ImageHandle getImageUrl(int actualImageIndex) {
 		if (actualImageIndex < 0 || actualImageIndex >= imageProvider.size())
 			return null;
-		return imageProvider.getImageUrl(actualImageIndex).getUrl();
+		return imageProvider.getImageUrl(actualImageIndex);
 	};
 }
