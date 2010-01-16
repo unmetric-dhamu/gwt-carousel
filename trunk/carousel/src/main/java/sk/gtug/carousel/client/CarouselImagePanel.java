@@ -23,6 +23,7 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		this.phase = phase;
 		initWidget(image);
 		setVisible(false);
+		setZIndex(-Math.abs(phase));
 	}
 
 	public void setZIndex(int zIndex) {
@@ -34,20 +35,23 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 	}-*/;
 
 	private ImageRect getImageRectForPhase(int phase) {
-		int x = boardWidth / 2;
-		int y = boardHeight / 2;
-		int width2 = width;
+		int x = (int) (boardWidth / 2);
+		int y = (int) (boardHeight / 2);
+		int width2 = (int) (width);
 		if (phase == 0) {
 			// no transformation needed
-		} else if (phase == -1 || phase == 1) {
-			width2 = (int) (width2 * 0.71);
-			x = x + phase * (5 + (width2 / 2) + width / 2);
-		} else if (phase == -2 || phase == 2) {
-			width2 = (int) (width2 * 0.47);
-			double d = (width / 2) + (width * 0.71) + width2 * 0.3;
-			x = (int) (x + d * (phase / 2));
-		} else if (phase == -3) {
-			width2 = (int) (width2 * 0.2);
+		} else {
+			double aa = 0.71;
+			if (phase == -1 || phase == 1) {
+				width2 = (int) (width2 * aa);
+				x = x + phase * (5 + (width2 / 2) + width / 2);
+			} else if (phase == -2 || phase == 2) {
+				width2 = (int) (width2 * 0.47);
+				double d = (width / 2) + (width * aa) + width2 * 0.3;
+				x = (int) (x + d * (phase / 2));
+			} else if (phase == -3 || phase == 3) {
+				width2 = (int) (width2 * 0.2);
+			}
 		}
 		return new ImageRect(x, y, width2, width2);
 	}
@@ -90,10 +94,10 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 	public int updatePhase(int delta) {
 		int lastPhase = phase;
 		this.phase -= delta;
-		if (phase == 3)
+		if (phase == 4)
 			phase = -3;
 		if (phase == -4)
-			phase = 2;
+			phase = 3;
 		return lastPhase;
 	}
 
@@ -114,13 +118,13 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		this.phase = phase;
 	}
 
-	public void setImageHandle(String imageHandle) {
+	public void setImageHandle(ImageHandle imageHandle) {
 		if (imageHandle == null) {
 			this.setVisible(false);
 		} else {
 			setVisible(true);
 			// if (!imageHandle.equals(image.getUrl()))
-			this.image.setUrl(imageHandle);
+			this.image.setUrl(imageHandle.getUrl());
 		}
 	}
 
@@ -167,7 +171,7 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 	public void onResize() {
 		this.boardWidth = parent.getElement().getClientWidth();
 		this.boardHeight = parent.getElement().getClientHeight();
-		this.width = (int) (Math.min(boardHeight * 0.95, boardWidth * 0.3) - 30);
+		this.width = (int) (Math.min(boardHeight * 0.95, boardWidth * 0.3333) - 30);
 		updatePanel(getImageRectForPhase(phase));
 	}
 }

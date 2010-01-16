@@ -40,6 +40,24 @@ public class CarouselExample implements EntryPoint {
         @Source("image3.jpg")
         DataResource image3();
 
+        @Source("image4.jpg")
+        DataResource image4();
+
+        @Source("image5.jpg")
+        DataResource image5();
+
+        @Source("image6.jpg")
+        DataResource image6();
+
+        @Source("image7.jpg")
+        DataResource image7();
+
+        @Source("image8.jpg")
+        DataResource image8();
+
+        @Source("image9.jpg")
+        DataResource image9();
+
         @NotStrict
         @Source("style.css")
         CssResource style();
@@ -62,12 +80,17 @@ public class CarouselExample implements EntryPoint {
         final DataResource img1 = Images.INSTANCE.image1();
         final DataResource img2 = Images.INSTANCE.image2();
         final DataResource img3 = Images.INSTANCE.image3();
+        final DataResource img4 = Images.INSTANCE.image4();
+        final DataResource img5 = Images.INSTANCE.image5();
+        final DataResource img6 = Images.INSTANCE.image6();
+        final DataResource img7 = Images.INSTANCE.image7();
+        final DataResource img8 = Images.INSTANCE.image8();
+        final DataResource img9 = Images.INSTANCE.image9();
 
-        String[] imageUrls = new String[] { img1.getUrl(), img2.getUrl(), img3.getUrl(), img3.getUrl(), img2.getUrl(), img2.getUrl(), img2.getUrl(),
-                img1.getUrl(), img3.getUrl() };
+        String[] imageUrls = new String[] { img1.getUrl(), img2.getUrl(), img3.getUrl(), img4.getUrl(), img5.getUrl(), img6.getUrl(), img7.getUrl(),
+                img8.getUrl(), img9.getUrl() };
         ImageLoader.loadImages(imageUrls, new CallBack() {
             public void onImagesLoaded(final ImageHandle[] imageHandles) {
-                Window.alert("loaded images:" + imageHandles.length);
                 CarouselImageProvider carouselImageProvider = new CarouselImageProvider() {
 
                     public int size() {
