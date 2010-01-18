@@ -31,13 +31,13 @@ public class CarouselExample implements EntryPoint {
     public interface Images extends ClientBundle {
         Images INSTANCE = GWT.create(Images.class);
 
-        @Source("image1.jpg")
+        @Source("slide_1.jpg")
         DataResource image1();
 
-        @Source("image2.jpg")
+        @Source("slide_2.jpg")
         DataResource image2();
 
-        @Source("image3.jpg")
+        @Source("slide_3.jpg")
         DataResource image3();
 
         @Source("image4.jpg")
