@@ -1,20 +1,17 @@
 package sk.gtug.carousel.client;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import sk.gtug.carousel.client.CarouselImagePanel.AnimationInfo;
-import sk.gtug.carousel.client.CarouselImagePanel.ImageRect;
-
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.layout.client.Layout;
+import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Carousel extends LayoutPanel {
 
@@ -32,9 +29,6 @@ public class Carousel extends LayoutPanel {
 		panels.add(new CarouselImagePanel(this, 2));
 		panels.add(new CarouselImagePanel(this, 3));
 
-		for (CarouselImagePanel panel : panels)
-			add(panel);
-
 		addDomHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				moveRectangle(1);
@@ -46,7 +40,8 @@ public class Carousel extends LayoutPanel {
 				moveRectangle(deltaY);
 			}
 		}, MouseWheelEvent.getType());
-
+		for (CarouselImagePanel panel : panels)
+			panel.updatePanel(panel.getImageRectForCurrentPhase());
 	}
 
 	private void moveRectangle(int delta) {
@@ -63,67 +58,33 @@ public class Carousel extends LayoutPanel {
 			this.actualImageIndex--;
 		else
 			this.actualImageIndex++;
-		Map<CarouselImagePanel, CarouselImagePanel.AnimationInfo> panelAnimationInfo = new HashMap<CarouselImagePanel, CarouselImagePanel.AnimationInfo>();
-		int steps = 20;
 		for (CarouselImagePanel panel : panels) {
-			int lastPhase = panel.updatePhase(delta > 0 ? 1 : -1);
-			ImageRect rectForPhase = panel.getImageRectForCurrentPhase();
-			AnimationInfo animInfo = panel.getAnimationInfo(rectForPhase,
-					steps, lastPhase);
-			panelAnimationInfo.put(panel, animInfo);
-			panel.updateStyle(panelAnimationInfo.get(panel));
+			panel.updatePhase(delta > 0 ? 1 : -1);
+			panel.updatePanel(panel.getImageRectForCurrentPhase());
+			panel.setZIndex(-Math.abs(panel.getPhase()));
 		}
-		animate(panelAnimationInfo, steps, delta);
+		animateImages(delta);
 	}
 
-	private void animate(
-			final Map<CarouselImagePanel, CarouselImagePanel.AnimationInfo> animInfo,
-			final int steps, int delta) {
-		final Set<CarouselImagePanel> panels = animInfo.keySet();
-		this.active = true;
+	private void animateImages(int delta) {
 		for (CarouselImagePanel panel : panels) {
-			if (animInfo.get(panel).lastPhase == -3 && delta > 0) {
+			if (panel.getLastPhase() == -3 && delta > 0) {
 				panel.setImageHandle(getImageUrl(actualImageIndex + 3));
 				break;
 			}
-			if (animInfo.get(panel).lastPhase == 3 && delta < 0) {
+			if (panel.getLastPhase() == 3 && delta < 0) {
 				panel.setImageHandle(getImageUrl(actualImageIndex - 3));
 				break;
 			}
 		}
-		new Timer() {
-			int duration = 150;
-			double step = 1;
+		animate(350);
+	}
 
-			{
-				schedule(1);
-			}
-
-			@Override
-			public void run() {
-				if (step == steps) {
-					for (CarouselImagePanel panel : panels) {
-						AnimationInfo aniInfo = animInfo.get(panel);
-						panel.updatePanel(panel.calculateStepRect(step,
-								aniInfo.stepX, aniInfo.stepY,
-								aniInfo.stepWidth, aniInfo.lastRect));
-					}
-					Carousel.this.active = false;
-				} else {
-					for (CarouselImagePanel panel : panels) {
-						AnimationInfo aniInfo = animInfo.get(panel);
-						double a = (step / steps) * (Math.PI / 2);
-						double myStep = Math.sin(a) * steps;
-						panel.updatePanel(panel.calculateStepRect(myStep,
-								aniInfo.stepX, aniInfo.stepY,
-								aniInfo.stepWidth, aniInfo.lastRect));
-						this.schedule(duration / aniInfo.steps);
-					}
-					step++;
-				}
-				;
-			};
-		};
+	public void setPosAndSize(Widget child, double left, double top,
+			double height, double width) {
+		Layer a = (Layout.Layer) child.getLayoutData();
+		a.setLeftWidth(left, Unit.PX, width, Unit.PX);
+		a.setTopHeight(top, Unit.PX, height, Unit.PX);
 	}
 
 	public void setImageProvider(CarouselImageProvider imageProvider) {
@@ -144,4 +105,12 @@ public class Carousel extends LayoutPanel {
 			return null;
 		return imageProvider.getImageUrl(actualImageIndex);
 	};
+
+	@Override
+	public void onResize() {
+		for (CarouselImagePanel panel : panels) {
+			panel.updatePanel(panel.getImageRectForCurrentPhase());
+		}
+		super.onResize();
+	}
 }

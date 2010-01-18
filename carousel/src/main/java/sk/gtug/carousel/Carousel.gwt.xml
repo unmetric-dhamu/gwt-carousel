@@ -2,4 +2,5 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.0-ms1/distro-source/core/src/gwt-module.dtd">
 <module>
   <inherits name='com.google.gwt.user.User' />
+  <inherits name='com.google.gwt.layout.Layout' />
 </module>

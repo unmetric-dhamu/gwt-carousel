@@ -1,16 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'
   xmlns:c='urn:import:sk.gtug.carousel.client'>
 
-  <ui:style>
-    .red {
-    	background-color: #555555;
-    }
-  </ui:style>
-
-  <g:DockLayoutPanel unit="PCT">
-    <g:center>
-      <c:Carousel ui:field="albums"></c:Carousel>
-    </g:center>
-  </g:DockLayoutPanel>
+  <c:Carousel ui:field="albums"></c:Carousel>
 
 </ui:UiBinder>
