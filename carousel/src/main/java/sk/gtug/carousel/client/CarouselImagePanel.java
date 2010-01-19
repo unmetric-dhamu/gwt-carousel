@@ -1,5 +1,9 @@
 package sk.gtug.carousel.client;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.layout.client.Layout;
+import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -33,13 +37,11 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		setWidth("100%");
 		parent.add(this);
 		setZIndex(-Math.abs(phase));
+		update();
 	}
 
-	public void setZIndex(int zIndex) {
-		try {
-			parent.getWidgetContainerElement(this).getStyle().setZIndex(zIndex);
-		} catch (Exception e) {
-		}
+	private void setZIndex(int zIndex) {
+		parent.getWidgetContainerElement(this).getStyle().setZIndex(zIndex);
 	}
 
 	private ImageRect getImageRectForPhase(int phase) {
@@ -66,79 +68,64 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		return new ImageRect(x, y, width2, width2, visible);
 	}
 
-	public ImageRect calculateStepRect(double step, final double stepX,
-			final double stepY, final double stepWidth, ImageRect rect) {
-		int newX = (int) (rect.x + step * stepX);
-		int newY = (int) (rect.y + step * stepY);
-		int newWidth = (int) (rect.width + step * stepWidth);
-		boolean visible = Math.abs(phase) < 3 && this.imageHandle != null ? true
-				: false;
-		return new ImageRect(newX, newY, newWidth, newWidth, visible);
+	private void updatePanel(ImageRect rect) {
+		int posX = rect.x - rect.width / 2;
+		int posY = rect.y - rect.height / 2;
+		setPosAndSize(posX, posY, rect.height, rect.width);
+		setVisible(rect.visible);
+		setZIndex(-Math.abs(phase));
 	}
 
-	public void updatePanel(ImageRect rect) {
-		int x = rect.x;
-		int y = rect.y;
-		int width = rect.width;
-		int height = rect.height;
-		int posX = x - width / 2;
-		int posY = y - height / 2;
-		parent.setPosAndSize(this, posX, posY, height, width);
-		this.setVisible(rect.visible);
+	private void update() {
+		updatePanel(getImageRectForCurrentPhase());
+	}
+
+	public void setPosAndSize(double left, double top, double height,
+			double width) {
+		Layer a = (Layout.Layer) getLayoutData();
+		a.setLeftWidth(left, Unit.PX, width, Unit.PX);
+		a.setTopHeight(top, Unit.PX, height, Unit.PX);
 	}
 
 	public ImageRect getImageRectForCurrentPhase() {
 		return getImageRectForPhase(phase);
 	}
 
-	public int updatePhase(int delta) {
+	public void updatePhase(int delta) {
 		lastPhase = phase;
 		this.phase -= delta;
 		if (phase == 4)
 			phase = -3;
 		if (phase == -4)
 			phase = 3;
-		return lastPhase;
+		update();
 	}
 
 	public int getLastPhase() {
 		return lastPhase;
 	}
 
-	public void updateStyle(AnimationInfo animInfo) {
-		this.setZIndex(getZIndex(animInfo));
-	}
-
-	private int getZIndex(AnimationInfo animInfo) {
-		int newPhase = animInfo.newPhase;
-		return -Math.abs(newPhase);
-	}
-
 	public int getPhase() {
 		return phase;
 	}
 
-	public void setPhase(int phase) {
-		this.phase = phase;
-	}
-
 	public void setImageHandle(ImageHandle imageHandle) {
 		this.imageHandle = imageHandle;
-		if (imageHandle == null) {
+		if (imageHandle == null)
 			this.setVisible(false);
-		} else {
+		else {
 			setVisible(true);
-			this.image.setUrl(imageHandle.getUrl());
-			updatePanel(getImageRectForPhase(phase));
+			image.setUrl(imageHandle.getUrl());
+			update();
 		}
 	}
 
 	public static class ImageRect {
-		int x;
-		int y;
-		int width;
-		int height;
-		boolean visible;
+		private int x;
+		private int y;
+		private int width;
+		private int height;
+		private boolean visible;
 
 		public ImageRect(int x, int y, int width, int height, boolean visible) {
 			this.x = x;
@@ -149,53 +136,24 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		}
 	}
 
-	public static class AnimationInfo {
-		double stepX;
-		double stepY;
-		double stepWidth;
-		ImageRect lastRect;
-		ImageRect newRect;
-		int steps;
-		int lastPhase;
-		int newPhase;
-
-		public AnimationInfo(double stepX, double stepY, double stepWidth,
-				ImageRect lastRect, ImageRect newRect, int steps,
-				int lastPhase, int newPhase) {
-			super();
-			this.stepX = stepX;
-			this.stepY = stepY;
-			this.stepWidth = stepWidth;
-			this.lastRect = lastRect;
-			this.newRect = newRect;
-			this.steps = steps;
-			this.lastPhase = lastPhase;
-			this.newPhase = newPhase;
-		}
-
+	public void onResize() {
+		if (imageHandle == null)
+			return;
+		Element container = parent.getWidgetContainerElement(this);
+		int clientHeight = container.getClientHeight();
+		int clientWidth = container.getClientWidth();
+		double imageWidth = imageHandle.getWidth();
+		double imageHeight = imageHandle.getHeight();
+		if (imageWidth < imageHeight)
+			clientWidth = (int) (clientWidth * (imageWidth / imageHeight));
+		else
+			clientHeight = (int) (clientHeight * (imageHeight / imageWidth));
+		image.setPixelSize(clientWidth, clientHeight);
 	}
 
-	public void onResize() {
-		this.boardWidth = parent.getElement().getClientWidth();
-		this.boardHeight = parent.getElement().getClientHeight();
-		this.width = (int) (Math.min(boardHeight * 0.95, boardWidth * 0.3333) - 30);
-		
-		int clientHeight = parent.getWidgetContainerElement(this)
-				.getClientHeight();
-		int clientWidth = parent.getWidgetContainerElement(this)
-				.getClientWidth();
-
-		if (imageHandle != null) {
-			double imageWidth = imageHandle.getWidth();
-			double imageHeight = imageHandle.getHeight();
-
-			if (imageWidth < imageHeight)
-				image.setPixelSize(
-						(int) (clientWidth * (imageWidth / imageHeight)),
-						clientHeight);
-			else
-				image.setPixelSize(clientWidth,
-						(int) (clientHeight * (imageHeight / imageWidth)));
-		}
+	public void setBoardSize(int boardWidth, int boardHeight) {
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
+		this.width = (int) (Math.min(boardHeight * 1, boardWidth * 0.3333) - 30);
 	}
 }
