@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.GwtCreateResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -21,13 +22,13 @@ public class CarouselExample implements EntryPoint {
 	public interface Images extends ClientBundle {
 		Images INSTANCE = GWT.create(Images.class);
 
-		@Source("slide_1.jpg")
+		@Source("image1.jpg")
 		DataResource image1();
 
-		@Source("slide_2.jpg")
+		@Source("image2.jpg")
 		DataResource image2();
 
-		@Source("slide_3.jpg")
+		@Source("image3.jpg")
 		DataResource image3();
 
 		@Source("image4.jpg")
@@ -74,10 +75,11 @@ public class CarouselExample implements EntryPoint {
 		final DataResource img7 = Images.INSTANCE.image7();
 		final DataResource img8 = Images.INSTANCE.image8();
 		final DataResource img9 = Images.INSTANCE.image9();
+		String baseUrl = GWT.getModuleBaseURL();
 
-		String[] imageUrls = new String[] { img1.getUrl(), img2.getUrl(),
-				img3.getUrl(), img4.getUrl(), img5.getUrl(), img6.getUrl(),
-				img7.getUrl(), img8.getUrl(), img9.getUrl() };
+		String[] imageUrls = new String[] { baseUrl + "/image01.jpg",
+				baseUrl + "/image02.jpg", baseUrl + "/image03.jpg", baseUrl + "/image04.jpg", baseUrl + "/image05.jpg",
+				baseUrl + "/image06.jpg", baseUrl + "/image07.jpg", baseUrl + "/image08.jpg", baseUrl + "/image09.jpg" };
 		ImageLoader.loadImages(imageUrls, new CallBack() {
 			public void onImagesLoaded(final ImageHandle[] imageHandles) {
 				CarouselImageProvider carouselImageProvider = new CarouselImageProvider() {
