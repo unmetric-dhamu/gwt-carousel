@@ -45,7 +45,8 @@ public class Carousel extends LayoutPanel implements ClickHandler,
 			if (panel.getLastPhase() == 3 && delta < 0)
 				panel.setImageHandle(getImageUrl(actualImageIndex - 3));
 		}
-		animate(350);
+		int duration = 350;
+		animate(duration);
 	}
 
 	public void setImageProvider(CarouselImageProvider imageProvider) {
