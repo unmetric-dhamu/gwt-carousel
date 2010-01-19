@@ -8,14 +8,12 @@ import sk.gtug.carousel.client.ImageLoader.CallBack;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class CarouselExample implements EntryPoint {
@@ -96,6 +94,5 @@ public class CarouselExample implements EntryPoint {
 			}
 		});
 		rootLayoutPanel.forceLayout();
-//		albums.forceLayout();
 	}
 }
