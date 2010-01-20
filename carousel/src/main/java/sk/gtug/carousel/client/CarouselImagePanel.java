@@ -117,6 +117,7 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 			setVisible(true);
 			image.setUrl(imageHandle.getUrl());
 			update();
+			onResize();
 		}
 	}
 
