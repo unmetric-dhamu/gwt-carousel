@@ -16,8 +16,16 @@ public class Carousel extends LayoutPanel implements ClickHandler, MouseWheelHan
     private int actualImageIndex;
 
     public Carousel() {
-        for (int i = -3; i <= 3; i++)
-            panels.add(new CarouselImagePanel(this, i));
+        for (int i = -3; i <= 3; i++) {
+            final CarouselImagePanel o = new CarouselImagePanel(this, i);
+            o.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    if (o.getPhase()>0) rotate(1);
+                    if (o.getPhase()<0) rotate(-1);
+                }
+            });
+            panels.add(o);
+        }
         addDomHandler(this, ClickEvent.getType());
         addDomHandler(this, MouseWheelEvent.getType());
     }
@@ -74,7 +82,7 @@ public class Carousel extends LayoutPanel implements ClickHandler, MouseWheelHan
     }
 
     public void onClick(ClickEvent event) {
-        rotate(1);
+        // rotate(1);
     }
 
     public void onMouseWheel(MouseWheelEvent event) {

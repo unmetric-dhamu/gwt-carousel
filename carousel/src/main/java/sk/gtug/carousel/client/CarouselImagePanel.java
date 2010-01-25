@@ -2,6 +2,7 @@ package sk.gtug.carousel.client;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.layout.client.Layout;
 import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.user.client.ui.Composite;
@@ -21,11 +22,12 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 	private final Image image = new Image();
 	private ImageHandle imageHandle;
 	private int lastPhase;
+    private HorizontalPanel imageContaienr;
 
 	public CarouselImagePanel(Carousel parent, int phase) {
 		this.parent = parent;
 		this.phase = phase;
-		HorizontalPanel imageContaienr = new HorizontalPanel();
+		imageContaienr = new HorizontalPanel();
 		imageContaienr.add(this.image);
 		imageContaienr.setCellHorizontalAlignment(this.image,
 				HasHorizontalAlignment.ALIGN_CENTER);
@@ -41,7 +43,7 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 	}
 
 	private void setZIndex(int zIndex) {
-		parent.getWidgetContainerElement(this).getStyle().setZIndex(zIndex);
+		parent.getWidgetContainerElement(this).getStyle().setZIndex(zIndex+3);
 	}
 
 	private ImageRect getImageRectForPhase(int phase) {
@@ -157,4 +159,8 @@ class CarouselImagePanel extends Composite implements RequiresResize {
 		this.boardHeight = boardHeight;
 		this.width = (int) (Math.min(boardHeight * 1, boardWidth * 0.3333) - 30);
 	}
+
+    public void addClickHandler(ClickHandler clickHandler) {
+        image.addClickHandler(clickHandler);
+    }
 }
