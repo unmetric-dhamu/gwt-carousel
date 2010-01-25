@@ -29,6 +29,7 @@ public class Carousel extends LayoutPanel implements ClickHandler, MouseWheelHan
             return;
         actualImageIndex += delta;
         update(delta);
+        fireEvent(new CarouselChangeEvent(actualImageIndex, imageProvider.getImageUrl(actualImageIndex)));
     }
 
     private boolean isFirstOrLastImage(int delta) {
@@ -53,6 +54,7 @@ public class Carousel extends LayoutPanel implements ClickHandler, MouseWheelHan
         for (CarouselImagePanel panel : panels) {
             panel.setImageHandle(getImageUrl(actualImageIndex + panel.getPhase()));
         }
+        fireEvent(new CarouselChangeEvent(actualImageIndex, imageProvider.getImageUrl(actualImageIndex)));
     }
 
     private ImageHandle getImageUrl(int actualImageIndex) {
@@ -78,4 +80,9 @@ public class Carousel extends LayoutPanel implements ClickHandler, MouseWheelHan
     public void onMouseWheel(MouseWheelEvent event) {
         rotate(event.getDeltaY() < 0 ? -1 : 1);
     }
+
+    public void addChangeHandler(CarouselChangeHandler handler) {
+        addHandler(handler, CarouselChangeEvent.getType());
+    }
+
 }
